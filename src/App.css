@@ -1,0 +1,27 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+}
+
+.header {
+    width: 100%;
+    padding: 22px 20px 10px 20px;
+    border-bottom: 1px solid #cccccc;
+    background-color: #3e8ed0;
+    box-sizing: border-box;
+}
+
+.title {
+    margin: 0;
+    font-size: 28px;
+    color: white;
+}
+
+.tick-text {
+    font-size: 16px;
+}
+
+.legend-text {
+    font-size: 14px;
+}
