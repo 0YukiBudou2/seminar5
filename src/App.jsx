@@ -1,6 +1,7 @@
 import {iris} from "./iris.jsx";
 import "./index.css";
 import "./App.css";
+import { useState } from "react";
 import * as d3 from "d3";
 
 const property = [
@@ -16,6 +17,18 @@ const color = {
     virginica: "orange",
 }
 
+const PulldownMenu = ({ value, onChange }) => {
+    return (
+        <select className="pulldown" value={value} onChange={onChange}>
+            {property.map((item) => (
+                <option key={item} value={item}>
+                    {item}
+                </option>
+            ))}
+        </select>
+    );
+};
+
 
 export default function App(){
     const plotWidth = 500;
@@ -23,8 +36,8 @@ export default function App(){
     const width = plotWidth + legendWidth;
     const height = 500;
     const margin = 50;
-    const xPro = property[0];
-    const yPro = property[1];
+    const [xPro, setXPro] = useState(property[0]);
+    const [yPro, setYPro] = useState(property[1]);
 
     const xScale = d3
         .scaleLinear() //
@@ -48,7 +61,31 @@ export default function App(){
                     scatter plot of iris data
                 </h1>
             </header>
+            <div className="control-panel">
 
+                <div className="selector-group">
+                    <label className="selector-label">
+                        x property
+                    </label>
+
+                    <PulldownMenu
+                        value={xPro}
+                        onChange={(e) => setXPro(e.target.value)}
+                    />
+                </div>
+
+                <div className="selector-group">
+                    <label className="selector-label">
+                        y property
+                    </label>
+
+                    <PulldownMenu
+                        value={yPro}
+                        onChange={(e) => setYPro(e.target.value)}
+                    />
+                </div>
+
+            </div>
             <svg width = {width} height = {height}>
                 <g>
                     <line x1 = {margin} x2 = {plotWidth - margin} y1 = {height - margin} y2 = {height - margin} stroke = "gray"/>
