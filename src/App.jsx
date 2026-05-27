@@ -17,6 +17,7 @@ const color = {
     virginica: "orange",
 }
 
+
 const PulldownMenu = ({ value, onChange }) => {
     return (
         <select className="pulldown" value={value} onChange={onChange}>
@@ -38,6 +39,12 @@ export default function App(){
     const margin = 50;
     const [xPro, setXPro] = useState(property[0]);
     const [yPro, setYPro] = useState(property[1]);
+    
+    const [visibleSpecies, setVisibleSpecies] = useState({
+        setosa: true,
+        versicolor: true,
+        virginica: true,
+    });
 
     const xScale = d3
         .scaleLinear() //
@@ -91,7 +98,7 @@ export default function App(){
                     <line x1 = {margin} x2 = {plotWidth - margin} y1 = {height - margin} y2 = {height - margin} stroke = "gray"/>
                     <line x1 = {margin} x2 = {margin} y1 = {margin} y2 = {height - margin} stroke = "gray"/>
                     {iris.map((item,i) => (
-                        <circle key={i} cx = {xScale(item[xPro])} cy = {yScale(item[yPro])} r = "5" fill = {color[item.species]} fillOpacity="0.5"/>
+                        <circle className = "dot" key={i} cx = {xScale(item[xPro])} cy = {yScale(item[yPro])} r = "5" fill = {color[item.species]} opacity={visibleSpecies[item.species] ? 0.5 : 0}/>
                     ))}
                     {xTicks.map((tick, i) => (
                         <g key={i}>
@@ -137,14 +144,25 @@ export default function App(){
                 </g>
                 <g transform={`translate(${plotWidth}, ${margin})`}>
                     {Object.entries(color).map(([species, c], i) => (
-                        <g key={species} transform={`translate(0, ${i * 30})`}>
+                        <g 
+                            key={species} 
+                            transform={`translate(0, ${i * 30})`}
+                            onClick={() =>
+                                setVisibleSpecies(prev => ({
+                                    ...prev,
+                                    [species]: !prev[species],
+                                }))
+                            }    
+                            style={{ cursor: "pointer" }}           
+                        >
+
                             <rect
                                 x={5}
                                 y={-5}
                                 width={15}
                                 height={15}
                                 fill={c}
-                                opacity = "0.5"
+                                opacity={visibleSpecies[species] ? 0.5 : 0.3}
                             />
 
                             <text
