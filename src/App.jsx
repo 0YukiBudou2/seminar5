@@ -12,9 +12,9 @@ const property = [
 ];
 
 const color = {
-    setosa: "green",
-    versicolor: "purple",
-    virginica: "orange",
+    setosa: "#7fc97f",
+    versicolor: "#beaed4",
+    virginica: "#fdc086",
 }
 
 
@@ -37,8 +37,8 @@ export default function App(){
     const width = plotWidth + legendWidth;
     const height = 500;
     const margin = 50;
-    const [xPro, setXPro] = useState(property[0]);
-    const [yPro, setYPro] = useState(property[1]);
+    const [xProperty, setXPro] = useState(property[0]);
+    const [yProperty, setYPro] = useState(property[1]);
     
     const [visibleSpecies, setVisibleSpecies] = useState({
         setosa: true,
@@ -48,14 +48,14 @@ export default function App(){
 
     const xScale = d3
         .scaleLinear() //
-        .domain(d3.extent(iris, d => d[xPro])) //extentで最小、最大確保　
+        .domain(d3.extent(iris, d => d[xProperty])) //extentで最小、最大確保　
         .nice()                                //ちょうどいい値に変換
         .range([margin, plotWidth - margin]);      //表示範囲
 
     
     const yScale = d3
         .scaleLinear()
-        .domain(d3.extent(iris, d => d[yPro]))
+        .domain(d3.extent(iris, d => d[yProperty]))
         .nice()
         .range([height - margin, margin]);
         
@@ -76,7 +76,7 @@ export default function App(){
                     </label>
 
                     <PulldownMenu
-                        value={xPro}
+                        value={xProperty}
                         onChange={(e) => setXPro(e.target.value)}
                     />
                 </div>
@@ -87,7 +87,7 @@ export default function App(){
                     </label>
 
                     <PulldownMenu
-                        value={yPro}
+                        value={yProperty}
                         onChange={(e) => setYPro(e.target.value)}
                     />
                 </div>
@@ -97,50 +97,56 @@ export default function App(){
                 <g>
                     <line x1 = {margin} x2 = {plotWidth - margin} y1 = {height - margin} y2 = {height - margin} stroke = "gray"/>
                     <line x1 = {margin} x2 = {margin} y1 = {margin} y2 = {height - margin} stroke = "gray"/>
-                    {iris.map((item,i) => (
-                        <circle className = "dot" key={i} cx = {xScale(item[xPro])} cy = {yScale(item[yPro])} r = "5" fill = {color[item.species]} opacity={visibleSpecies[item.species] ? 0.5 : 0}/>
-                    ))}
-                    {xTicks.map((tick, i) => (
-                        <g key={i}>
-                            <line
-                            x1={xScale(tick)}
-                            x2={xScale(tick)}
-                            y1={height - margin}
-                            y2={height - margin + 10}
-                            stroke="black"
-                        />
-
-                        <text
-                            className="tick-text"
-                            x={xScale(tick)}
-                            y={height - margin + 25}
-                            textAnchor="middle"
-                        >
-                            {tick}
-                        </text>
-                    </g>
-                    ))}
-                    {yTicks.map((tick, i) => (
-                        <g key={i}>
-                            <line
-                                x1={margin}
-                                x2={margin - 10}
-                                y1={yScale(tick)}
-                                y2={yScale(tick)}
+                    <g>
+                        {xTicks.map((tick, i) => (
+                            <g key={i}>
+                                <line
+                                x1={xScale(tick)}
+                                x2={xScale(tick)}
+                                y1={height - margin}
+                                y2={height - margin + 10}
                                 stroke="black"
                             />
 
                             <text
-                            className="legend-text"
-                                x={margin - 15}
-                                y={yScale(tick)}
-                                textAnchor="end"
-                                dominantBaseline="middle"
+                                className="tick-text"
+                                x={xScale(tick)}
+                                y={height - margin + 25}
+                                textAnchor="middle"
                             >
                                 {tick}
                             </text>
                         </g>
-                    ))}                
+                        ))}
+                    </g>
+                    <g>
+                        {yTicks.map((tick, i) => (
+                            <g key={i}>
+                                <line
+                                    x1={margin}
+                                    x2={margin - 10}
+                                    y1={yScale(tick)}
+                                    y2={yScale(tick)}
+                                    stroke="black"
+                                />
+
+                                <text
+                                className="legend-text"
+                                    x={margin - 15}
+                                    y={yScale(tick)}
+                                    textAnchor="end"
+                                    dominantBaseline="middle"
+                                >
+                                    {tick}
+                                </text>
+                            </g>
+                        ))}
+                    </g>                    
+                </g>
+                <g>
+                    {iris.map((item,i) => (
+                        <circle className = "dot" key={i} cx = {xScale(item[xProperty])} cy = {yScale(item[yProperty])} r = "5" fill = {color[item.species]} opacity={visibleSpecies[item.species] ? 1 : 0}/>
+                    ))}
                 </g>
                 <g transform={`translate(${plotWidth}, ${margin})`}>
                     {Object.entries(color).map(([species, c], i) => (
@@ -162,7 +168,7 @@ export default function App(){
                                 width={15}
                                 height={15}
                                 fill={c}
-                                opacity={visibleSpecies[species] ? 0.5 : 0.3}
+                                opacity={visibleSpecies[species] ? 1 : 0.5}
                             />
 
                             <text
